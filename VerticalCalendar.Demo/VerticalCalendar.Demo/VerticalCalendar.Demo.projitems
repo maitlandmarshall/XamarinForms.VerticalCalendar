@@ -6,7 +6,7 @@
     <SharedGUID>{BB088FA5-B533-4B51-B0A5-5B72262D503C}</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>VerticalCalendar.Demo</Import_RootNamespace>
+    <Import_RootNamespace>VerticalCalendarDemo</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />

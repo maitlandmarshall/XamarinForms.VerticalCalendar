@@ -6,7 +6,7 @@
     <ProjectGuid>{E90AB07D-D263-4E6B-A033-36B7E84BCB4B}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>VerticalCalendar.Demo.Droid</RootNamespace>
+    <RootNamespace>VerticalCalendarDemo.Droid</RootNamespace>
     <AssemblyName>VerticalCalendar.Demo.Android</AssemblyName>
     <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
     <AndroidApplication>True</AndroidApplication>
@@ -81,7 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\VerticalCalendar\VerticalCalendar.csproj">
-      <Project>{c0ee05f4-46a5-41c5-9a11-21e18d270d19}</Project>
+      <Project>{ef72c11d-66e7-4987-acac-26c47c1779b0}</Project>
       <Name>VerticalCalendar</Name>
     </ProjectReference>
   </ItemGroup>

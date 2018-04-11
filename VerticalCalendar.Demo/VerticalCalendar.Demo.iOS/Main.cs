@@ -5,7 +5,7 @@ using System.Linq;
 using Foundation;
 using UIKit;
 
-namespace VerticalCalendar.Demo.iOS
+namespace VerticalCalendarDemo.iOS
 {
     public class Application
     {

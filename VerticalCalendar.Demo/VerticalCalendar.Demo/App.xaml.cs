@@ -5,7 +5,7 @@ using System.Text;
 
 using Xamarin.Forms;
 
-namespace VerticalCalendar.Demo
+namespace VerticalCalendarDemo
 {
 	public partial class App : Application
 	{
@@ -13,7 +13,7 @@ namespace VerticalCalendar.Demo
 		{
 			InitializeComponent();
 
-			MainPage = new VerticalCalendar.Demo.MainPage();
+			MainPage = new NavigationPage(new VerticalCalendarDemo.MainPage());
 		}
 
 		protected override void OnStart ()

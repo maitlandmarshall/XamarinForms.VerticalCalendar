@@ -8,7 +8,7 @@
     <ProjectGuid>{1B56CE0B-774D-4275-88BA-483275CE0B81}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
-    <RootNamespace>VerticalCalendar.Demo.iOS</RootNamespace>
+    <RootNamespace>VerticalCalendarDemo.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>VerticalCalendar.Demo.iOS</AssemblyName>
     <NuGetPackageImportStamp>
@@ -126,7 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\VerticalCalendar\VerticalCalendar.csproj">
-      <Project>{c0ee05f4-46a5-41c5-9a11-21e18d270d19}</Project>
+      <Project>{ef72c11d-66e7-4987-acac-26c47c1779b0}</Project>
       <Name>VerticalCalendar</Name>
     </ProjectReference>
   </ItemGroup>

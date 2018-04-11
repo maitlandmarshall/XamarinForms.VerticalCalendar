@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("VerticalCalendar.Demo.Droid.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("VerticalCalendarDemo.Droid.Resource", IsApplication=true)]
 
-namespace VerticalCalendar.Demo.Droid
+namespace VerticalCalendarDemo.Droid
 {
 	
 	
@@ -26,7 +26,7 @@ namespace VerticalCalendar.Demo.Droid
 		
 		public static void UpdateIdValues()
 		{
-			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::VerticalCalendar.Demo.Droid.Resource.Attribute.actionBarSize;
+			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::VerticalCalendarDemo.Droid.Resource.Attribute.actionBarSize;
 		}
 		
 		public partial class Animation
