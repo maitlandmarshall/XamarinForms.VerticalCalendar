@@ -12,5 +12,10 @@ namespace VerticalCalendar
         {
             this.FirstDayOfWeek = date;
         }
+
+        public override string ToString()
+        {
+            return this.FirstDayOfWeek.ToString("yyyy-MM-dd");
+        }
     }
 }

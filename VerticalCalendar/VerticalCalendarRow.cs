@@ -61,7 +61,6 @@ namespace VerticalCalendar
                 if(this.Calendar.AlternativeMonthView)
                 {
                     if(newDate.Month != periodStartDate.Month)
-
                     {
                         cell.BindingContext = null;
                     } else

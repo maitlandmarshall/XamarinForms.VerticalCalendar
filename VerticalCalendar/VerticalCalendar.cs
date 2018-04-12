@@ -117,8 +117,10 @@ namespace VerticalCalendar
         void BuildCalendar()
         {
             this.Calendar = new ListView(ListViewCachingStrategy.RecycleElement);
+            this.Calendar.ItemAppearing += Calendar_ItemAppearing;
+            this.Calendar.ItemDisappearing += Calendar_ItemDisappearing;
 
-            if(this.AlternativeMonthView)
+            if (this.AlternativeMonthView)
             {
                 this.Calendar.IsGroupingEnabled = true;
                 this.Calendar.GroupDisplayBinding = new Binding("Title");
@@ -147,24 +149,22 @@ namespace VerticalCalendar
 
                 while (genDate <= endDate)
                 {
-                    DateTime newDate = genDate.AddDays(7);
-                    if(newDate.Month == genDate.Month)
-                    {
-                        vm.Add(new VerticalCalendarRowViewModel(genDate));
-                    } else
-                    {
-                        DateTime lastDayOfMonth = new DateTime(genDate.Year, genDate.Month, 1).AddMonths(1).AddDays(-1);
-                        if(genDate.Day != lastDayOfMonth.Day)
-                        {
-                            newDate = genDate.AddDays(1);
-                            vm.Add(new VerticalCalendarRowViewModel(newDate));
-                        } else
-                        {
-                            newDate = this.GetFirstDayOfMonth(newDate);
+                    vm.Add(new VerticalCalendarRowViewModel(genDate));
 
-                            months.Add(vm);
-                            vm = new VerticalCalendarRowGroupedViewModel();
+                    DateTime newDate = genDate.AddDays(7);
+                    if (newDate.Month != genDate.Month)
+                    {
+                        DateTime newDateFirstDayOfWeek = this.GetFirstDayOfWeek(newDate);
+
+                        if(newDateFirstDayOfWeek.Month == genDate.Month)
+                        {
+                            vm.Add(new VerticalCalendarRowViewModel(newDateFirstDayOfWeek));
                         }
+                        
+                        months.Add(vm);
+
+                        newDate = this.GetFirstDayOfMonth(newDate);
+                        vm = new VerticalCalendarRowGroupedViewModel();
                     }
 
                     genDate = newDate;
@@ -172,6 +172,9 @@ namespace VerticalCalendar
 
                 if (!months.Contains(vm)) months.Add(vm);
                 this.Calendar.ItemsSource = months;
+
+                VerticalCalendarRowGroupedViewModel scrollTo = months.FirstOrDefault(y => y.FirstOrDefault().FirstDayOfWeek >= startDate);
+                this.Calendar.ScrollTo(scrollTo.FirstOrDefault(), ScrollToPosition.End, false);
 
             } else
             {
@@ -188,9 +191,6 @@ namespace VerticalCalendar
                 this.Calendar.ItemsSource = weeks;
                 this.Calendar.ScrollTo(weeks.FirstOrDefault(y => y.FirstDayOfWeek == startDate), ScrollToPosition.End, false);
             }
-            
-            this.Calendar.ItemAppearing += Calendar_ItemAppearing;
-            this.Calendar.ItemDisappearing += Calendar_ItemDisappearing;
 
             Device.BeginInvokeOnMainThread(async () =>
             {
@@ -240,6 +240,11 @@ namespace VerticalCalendar
 
         public List<DateTime> GetVisibleMonthRange()
         {
+            if (!this.CurrentMonthDisappearing.HasValue && this.CurrentMonthAppearing.HasValue)
+            {
+                this.CurrentMonthDisappearing = this.CurrentMonthAppearing.Value.AddMonths(-2);
+            }
+
             if (this.CurrentMonthAppearing == null || this.CurrentMonthDisappearing == null) return null;
 
             DateTime startMonth, endMonth;

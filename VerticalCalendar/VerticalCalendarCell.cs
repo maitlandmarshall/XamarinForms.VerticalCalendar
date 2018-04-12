@@ -18,6 +18,11 @@ namespace VerticalCalendar
 
         View CustomOverlay { get; set; }
 
+        DateTime? Date
+        {
+            get => this.BindingContext as DateTime?;
+        }
+
         public VerticalCalendarCell(VerticalCalendar calendar)
         {
             this.Calendar = calendar;
@@ -40,12 +45,10 @@ namespace VerticalCalendar
 
         void CellTapped()
         {
-            if (this.BindingContext == null) return;            
+            if (!this.Date.HasValue) return;            
+            if (this.IsDisabled()) return;
 
-            DateTime bindingContext = (DateTime)this.BindingContext;
-            if (this.IsDisabled(bindingContext)) return;
-
-            this.Calendar.OnDateTapped(bindingContext);
+            this.Calendar.OnDateTapped(this.Date.Value);
         }
 
         protected override void OnBindingContextChanged()
@@ -55,36 +58,36 @@ namespace VerticalCalendar
             this.RemoveMonthLabel();
             this.RemoveCustomOverlay();
 
-            if (this.BindingContext == null)
+            if (!this.Date.HasValue)
             {
                 if(this.Calendar.AlternativeMonthView)
                 {
                     this.DayLabel.IsVisible = false;
+                    this.SetCellBackgroundColor();
                 }
 
                 return;
             }
 
-            DateTime bindingContext = (DateTime)this.BindingContext;
-
             // set the cells day of month
-            this.DayLabel.Text = bindingContext.Day.ToString();
+            this.DayLabel.Text = this.Date.Value.Day.ToString();
 
-            this.SetCellBackgroundColor(bindingContext);
-            this.SetCellMonthLabel(bindingContext);
-            this.SetCellCustomView(bindingContext);
+            this.SetCellBackgroundColor();
+            this.SetCellMonthLabel();
+            this.SetCellCustomView();
 
             this.DayLabel.IsVisible = true;
         }
 
-        bool IsDisabled(DateTime bindingContext)
+        bool IsDisabled()
         {
-            return bindingContext > this.Calendar.MaximumDate || bindingContext < this.Calendar.MinimumDate;
+            if (!this.Date.HasValue) return true;
+            return this.Date.Value > this.Calendar.MaximumDate || this.Date.Value < this.Calendar.MinimumDate;
         }
 
-        void SetCellBackgroundColor(DateTime bindingContext)
+        void SetCellBackgroundColor()
         {
-            if (this.IsDisabled(bindingContext))
+            if (this.IsDisabled())
             {
                 this.Cell.BackgroundColor = this.Calendar.CellDisabledBackgroundColor ?? DefaultDisabledBackgroundColor;
             }
@@ -94,13 +97,13 @@ namespace VerticalCalendar
             }
         }
 
-        void SetCellMonthLabel(DateTime bindingContext)
+        void SetCellMonthLabel()
         {
             if (this.Calendar.AlternativeMonthView) return;
 
-            if (bindingContext.Day == 1)
+            if (this.Date.Value.Day == 1)
             {
-                string monthName = bindingContext.ToString("MMM");
+                string monthName = this.Date.Value.ToString("MMM");
 
                 this.MonthLabel = new Label();
                 this.MonthLabel.Text = monthName;
@@ -108,9 +111,9 @@ namespace VerticalCalendar
             }
         }
 
-        void SetCellCustomView(DateTime bindingContext)
+        void SetCellCustomView()
         {
-            View customOverlay = this.Calendar.OnCustomViewForDateCell(bindingContext);
+            View customOverlay = this.Calendar.OnCustomViewForDateCell(this.Date.Value);
             if (customOverlay == null) return   ;
 
             this.Cell.Children.Add(customOverlay);
