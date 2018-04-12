@@ -11,7 +11,12 @@ namespace VerticalCalendar
             get
             {
                 if (this.Count == 0) return "";
-                return this[0].FirstDayOfWeek.ToString("MMMM");
+                VerticalCalendarRowViewModel first = this[0];
+                if(first.FirstDayOfWeek.Month == 1)
+                {
+                    return first.FirstDayOfWeek.ToString("MMMM yyyy");
+                }
+                return first.FirstDayOfWeek.ToString("MMMM");
             }
         }
     }

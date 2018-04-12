@@ -202,7 +202,10 @@ namespace VerticalCalendar
 
         private void Calendar_ItemAppearing(object sender, ItemVisibilityEventArgs e)
         {
-            DateTime currentMonth = (e.Item as VerticalCalendarRowViewModel).FirstDayOfWeek;
+            VerticalCalendarRowViewModel item = e.Item as VerticalCalendarRowViewModel;
+            if (item == null) return;
+
+            DateTime currentMonth = item.FirstDayOfWeek;
             currentMonth = new DateTime(currentMonth.Year, currentMonth.Month, 1);
 
             if (this.CurrentMonthAppearing == currentMonth) return;
@@ -214,7 +217,10 @@ namespace VerticalCalendar
 
         private void Calendar_ItemDisappearing(object sender, ItemVisibilityEventArgs e)
         {
-            DateTime currentMonth = (e.Item as VerticalCalendarRowViewModel).FirstDayOfWeek;
+            VerticalCalendarRowViewModel item = e.Item as VerticalCalendarRowViewModel;
+            if (item == null) return;
+
+            DateTime currentMonth = item.FirstDayOfWeek;
             currentMonth = new DateTime(currentMonth.Year, currentMonth.Month, 1);
 
             if (this.CurrentMonthDisappearing == currentMonth) return;
@@ -222,6 +228,7 @@ namespace VerticalCalendar
 
             this.HandleMonthVisiblity();
         }
+
 
         void HandleMonthVisiblity()
         {
