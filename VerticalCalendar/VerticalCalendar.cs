@@ -59,7 +59,7 @@ namespace VerticalCalendar
 
         public VerticalCalendar()
         {
-            Build();
+            this.Build();
         }
 
         void Build()
@@ -117,6 +117,7 @@ namespace VerticalCalendar
         void BuildCalendar()
         {
             this.Calendar = new ListView(ListViewCachingStrategy.RecycleElement);
+
             this.Calendar.ItemAppearing += Calendar_ItemAppearing;
             this.Calendar.ItemDisappearing += Calendar_ItemDisappearing;
 
@@ -137,8 +138,8 @@ namespace VerticalCalendar
             DateTime startDate = GetFirstDayOfWeek();
 
             // generate x years worth of rows
-            const int yearsToGenerate = 10;
-
+            const int yearsToGenerate = 5;
+            Action scrollToDelegate;
             if(this.AlternativeMonthView)
             {
                 DateTime genDate = this.GetFirstDayOfMonth(startDate.AddYears(-((int)yearsToGenerate / 2)));
@@ -173,8 +174,11 @@ namespace VerticalCalendar
                 if (!months.Contains(vm)) months.Add(vm);
                 this.Calendar.ItemsSource = months;
 
-                VerticalCalendarRowGroupedViewModel scrollTo = months.FirstOrDefault(y => y.FirstOrDefault().FirstDayOfWeek >= startDate);
-                this.Calendar.ScrollTo(scrollTo.FirstOrDefault(), ScrollToPosition.End, false);
+                VerticalCalendarRowGroupedViewModel group = months.FirstOrDefault(y => y.FirstOrDefault().FirstDayOfWeek >= startDate);
+                scrollToDelegate = new Action(() =>
+                {
+                    this.Calendar.ScrollTo(group.FirstOrDefault(), group, ScrollToPosition.End, false);
+                });
 
             } else
             {
@@ -189,12 +193,27 @@ namespace VerticalCalendar
                 }
 
                 this.Calendar.ItemsSource = weeks;
-                this.Calendar.ScrollTo(weeks.FirstOrDefault(y => y.FirstDayOfWeek == startDate), ScrollToPosition.End, false);
+
+                scrollToDelegate = new Action(() =>
+                {
+                    this.Calendar.ScrollTo(weeks.FirstOrDefault(y => y.FirstDayOfWeek == startDate), ScrollToPosition.End, false);
+                });
+            }
+
+            if (Device.RuntimePlatform == Device.iOS)
+            {
+                scrollToDelegate();
             }
 
             Device.BeginInvokeOnMainThread(async () =>
-            {
+            {   
                 await Task.Delay(100);
+
+                if(Device.RuntimePlatform == Device.Android)
+                {
+                    scrollToDelegate();
+                }
+
                 this.Loaded = true;
                 this.HandleMonthVisiblity();
             });

@@ -12,6 +12,7 @@ namespace VerticalCalendar
 
         VerticalCalendar Calendar { get; set; }
 
+        Grid Container { get; set; }
         Grid Cell { get; set; }
         Label DayLabel { get; set; }
         Label MonthLabel { get; set; }
@@ -27,9 +28,11 @@ namespace VerticalCalendar
         {
             this.Calendar = calendar;
 
+            this.Container = new Grid();
             this.Cell = new Grid();
             Cell.BackgroundColor = calendar.CellBackgroundColor ?? DefaultBackgroundColor;
             Cell.Margin = new Thickness(1);
+            this.Container.Children.Add(this.Cell);
 
             this.DayLabel = new Label();
             this.DayLabel.HorizontalTextAlignment = TextAlignment.End;
@@ -38,7 +41,7 @@ namespace VerticalCalendar
 
             Cell.Children.Add(this.DayLabel);
 
-            this.Content = this.Cell;
+            this.Content = this.Container;
 
             this.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(this.CellTapped) });
         }
@@ -116,7 +119,7 @@ namespace VerticalCalendar
             View customOverlay = this.Calendar.OnCustomViewForDateCell(this.Date.Value);
             if (customOverlay == null) return   ;
 
-            this.Cell.Children.Add(customOverlay);
+            this.Container.Children.Add(customOverlay);
             this.CustomOverlay = customOverlay;   
         }
 
@@ -133,7 +136,7 @@ namespace VerticalCalendar
         {
             if(this.CustomOverlay != null)
             {
-                this.Cell.Children.Remove(this.CustomOverlay);
+                this.Container.Children.Remove(this.CustomOverlay);
                 this.CustomOverlay = null;
             }
         }
