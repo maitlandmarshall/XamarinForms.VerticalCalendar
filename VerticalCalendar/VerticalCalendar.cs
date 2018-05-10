@@ -52,8 +52,8 @@ namespace VerticalCalendar
             }
         }
 
-        DateTime? CurrentMonthAppearing { get; set; }
-        DateTime? CurrentMonthDisappearing { get; set; }
+        DateTime? CurrentDateAppearing { get; set; }
+        DateTime? CurrentDateDisappearing { get; set; }
 
         bool Loaded { get; set; } = false;
 
@@ -90,7 +90,7 @@ namespace VerticalCalendar
                 lblDay.Text = dayOfWeek;
                 lblDay.HorizontalTextAlignment = TextAlignment.Center;
                 lblDay.VerticalTextAlignment = TextAlignment.Center;
-                lblDay.FontSize = 10;
+                lblDay.FontSize = 16;
 
                 Grid.SetColumn(lblDay, i);
 
@@ -219,16 +219,16 @@ namespace VerticalCalendar
             });
         }
 
+
         private void Calendar_ItemAppearing(object sender, ItemVisibilityEventArgs e)
         {
             VerticalCalendarRowViewModel item = e.Item as VerticalCalendarRowViewModel;
             if (item == null) return;
 
             DateTime currentMonth = item.FirstDayOfWeek;
-            currentMonth = new DateTime(currentMonth.Year, currentMonth.Month, 1);
 
-            if (this.CurrentMonthAppearing == currentMonth) return;
-            this.CurrentMonthAppearing = currentMonth;
+            if (this.CurrentDateAppearing == currentMonth) return;
+            this.CurrentDateAppearing = currentMonth;
 
             this.HandleMonthVisiblity();
         }
@@ -240,10 +240,9 @@ namespace VerticalCalendar
             if (item == null) return;
 
             DateTime currentMonth = item.FirstDayOfWeek;
-            currentMonth = new DateTime(currentMonth.Year, currentMonth.Month, 1);
 
-            if (this.CurrentMonthDisappearing == currentMonth) return;
-            this.CurrentMonthDisappearing = currentMonth;
+            if (this.CurrentDateDisappearing == currentMonth) return;
+            this.CurrentDateDisappearing = currentMonth;
 
             this.HandleMonthVisiblity();
         }
@@ -253,7 +252,7 @@ namespace VerticalCalendar
         {
             if (!this.Loaded) return;
             if (this.MonthsBecameVisible == null) return;
-            if (this.CurrentMonthAppearing == null || this.CurrentMonthDisappearing == null) return;
+            if (this.CurrentDateAppearing == null || this.CurrentDateDisappearing == null) return;
 
             List<DateTime> range = this.GetVisibleMonthRange();
             if(range.Count <= 1)
@@ -266,23 +265,23 @@ namespace VerticalCalendar
 
         public List<DateTime> GetVisibleMonthRange()
         {
-            if (!this.CurrentMonthDisappearing.HasValue && this.CurrentMonthAppearing.HasValue)
+            if (!this.CurrentDateDisappearing.HasValue && this.CurrentDateAppearing.HasValue)
             {
-                this.CurrentMonthDisappearing = this.CurrentMonthAppearing.Value.AddMonths(-2);
+                this.CurrentDateDisappearing = this.CurrentDateAppearing.Value.AddMonths(-1);
             }
 
-            if (this.CurrentMonthAppearing == null || this.CurrentMonthDisappearing == null) return null;
+            if (this.CurrentDateAppearing == null || this.CurrentDateDisappearing == null) return null;
 
             DateTime startMonth, endMonth;
-            if (this.CurrentMonthAppearing > this.CurrentMonthDisappearing)
+            if (this.CurrentDateAppearing > this.CurrentDateDisappearing)
             {
-                startMonth = this.CurrentMonthDisappearing.Value;
-                endMonth = this.CurrentMonthAppearing.Value;
+                startMonth = this.CurrentDateDisappearing.Value;
+                endMonth = this.CurrentDateAppearing.Value;
             }
             else
             {
-                startMonth = this.CurrentMonthAppearing.Value;
-                endMonth = this.CurrentMonthDisappearing.Value;
+                startMonth = this.CurrentDateAppearing.Value;
+                endMonth = this.CurrentDateDisappearing.Value;
             }
 
             List<DateTime> monthRange = new List<DateTime>();

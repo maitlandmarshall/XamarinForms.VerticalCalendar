@@ -14,8 +14,11 @@ namespace VerticalCalendar
 
         Grid Container { get; set; }
         Grid Cell { get; set; }
+
         Label DayLabel { get; set; }
         Label MonthLabel { get; set; }
+
+        Grid CurrentDate { get; set; }
 
         View CustomOverlay { get; set; }
 
@@ -35,9 +38,9 @@ namespace VerticalCalendar
             this.Container.Children.Add(this.Cell);
 
             this.DayLabel = new Label();
-            this.DayLabel.HorizontalTextAlignment = TextAlignment.End;
-            this.DayLabel.VerticalTextAlignment = TextAlignment.End;
-            this.DayLabel.FontSize = 8;
+            this.DayLabel.HorizontalTextAlignment = TextAlignment.Center;
+            this.DayLabel.VerticalTextAlignment = TextAlignment.Center;
+            this.DayLabel.FontSize = 14;
 
             Cell.Children.Add(this.DayLabel);
 
@@ -60,6 +63,7 @@ namespace VerticalCalendar
 
             this.RemoveMonthLabel();
             this.RemoveCustomOverlay();
+            this.RemoveCurrentDate();
 
             if (!this.Date.HasValue)
             {
@@ -72,12 +76,15 @@ namespace VerticalCalendar
                 return;
             }
 
+
             // set the cells day of month
             this.DayLabel.Text = this.Date.Value.Day.ToString();
 
             this.SetCellBackgroundColor();
             this.SetCellMonthLabel();
             this.SetCellCustomView();
+
+            this.SetCurrentDate();
 
             this.DayLabel.IsVisible = true;
         }
@@ -86,6 +93,19 @@ namespace VerticalCalendar
         {
             if (!this.Date.HasValue) return true;
             return this.Date.Value > this.Calendar.MaximumDate || this.Date.Value < this.Calendar.MinimumDate;
+        }
+
+        void SetCurrentDate()
+        {
+            if (this.Date.Value == DateTime.Now.Date)
+            {
+                this.CurrentDate = new Grid();
+                this.CurrentDate.BackgroundColor = Color.FromHex("#2CB044");
+                this.CurrentDate.Opacity = 0.4;
+
+                this.Cell.Children.Add(this.CurrentDate);
+                this.Cell.LowerChild(this.CurrentDate);
+            }
         }
 
         void SetCellBackgroundColor()
@@ -138,6 +158,15 @@ namespace VerticalCalendar
             {
                 this.Container.Children.Remove(this.CustomOverlay);
                 this.CustomOverlay = null;
+            }
+        }
+
+        void RemoveCurrentDate()
+        {
+            if(this.CurrentDate != null)
+            {
+                this.Cell.Children.Remove(this.CurrentDate);
+                this.CurrentDate = null;
             }
         }
     }
