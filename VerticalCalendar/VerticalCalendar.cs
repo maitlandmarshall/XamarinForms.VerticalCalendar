@@ -200,19 +200,16 @@ namespace VerticalCalendar
                 });
             }
 
-            if (Device.RuntimePlatform == Device.iOS)
-            {
-                scrollToDelegate();
-            }
+            scrollToDelegate();
 
             Device.BeginInvokeOnMainThread(async () =>
-            {   
-                await Task.Delay(100);
-
+            {
                 if(Device.RuntimePlatform == Device.Android)
                 {
-                    scrollToDelegate();
+                    await Task.Delay(5);
                 }
+                
+                scrollToDelegate();
 
                 this.Loaded = true;
                 this.HandleMonthVisiblity();
