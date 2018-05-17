@@ -139,7 +139,6 @@ namespace VerticalCalendar
 
             // generate x years worth of rows
             const int yearsToGenerate = 5;
-            Action scrollToDelegate;
             if(this.AlternativeMonthView)
             {
                 DateTime genDate = this.GetFirstDayOfMonth(startDate.AddYears(-((int)yearsToGenerate / 2)));
@@ -175,10 +174,7 @@ namespace VerticalCalendar
                 this.Calendar.ItemsSource = months;
 
                 VerticalCalendarRowGroupedViewModel group = months.FirstOrDefault(y => y.FirstOrDefault().FirstDayOfWeek >= startDate);
-                scrollToDelegate = new Action(() =>
-                {
-                    this.Calendar.ScrollTo(group.FirstOrDefault(), group, ScrollToPosition.End, false);
-                });
+                this.Calendar.ScrollTo(group.FirstOrDefault(), group, ScrollToPosition.End, true);
 
             } else
             {
@@ -193,24 +189,11 @@ namespace VerticalCalendar
                 }
 
                 this.Calendar.ItemsSource = weeks;
-
-                scrollToDelegate = new Action(() =>
-                {
-                    this.Calendar.ScrollTo(weeks.FirstOrDefault(y => y.FirstDayOfWeek == startDate), ScrollToPosition.End, false);
-                });
+                this.Calendar.ScrollTo(weeks.FirstOrDefault(y => y.FirstDayOfWeek == startDate), ScrollToPosition.End, true);
             }
-
-            scrollToDelegate();
 
             Device.BeginInvokeOnMainThread(async () =>
             {
-                if(Device.RuntimePlatform == Device.Android)
-                {
-                    await Task.Delay(5);
-                }
-                
-                scrollToDelegate();
-
                 this.Loaded = true;
                 this.HandleMonthVisiblity();
             });
