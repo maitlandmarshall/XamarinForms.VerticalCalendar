@@ -14,7 +14,13 @@ namespace VerticalCalendar
 
         public event CustomViewForDateCellDelegate CustomViewForDateCell;
         public event EventHandler<DateTime> DateTapped;
-        public event EventHandler<List<DateTime>> MonthsBecameVisible;
+        public event EventHandler<IEnumerable<VerticalCalendarRowViewModel>> VisibleWeeksAfterScroll;
+
+        internal Func<List<VerticalCalendarRowViewModel>> GetVisibleRows;
+        public List<VerticalCalendarRowViewModel> VisibleRows
+        {
+            get => this.GetVisibleRows?.Invoke();
+        }
 
         internal View OnCustomViewForDateCell(DateTime date)
         {
@@ -28,7 +34,7 @@ namespace VerticalCalendar
 
         Grid ContentGrid { get; set; }
         Grid Header { get; set; }
-        ListView Calendar { get; set; }
+        VerticalCalendarListView Calendar { get; set; }
 
         DayOfWeek FirstDayOfWeek { get; set; } = DayOfWeek.Sunday;
 
@@ -56,6 +62,11 @@ namespace VerticalCalendar
         DateTime? CurrentDateDisappearing { get; set; }
 
         bool Loaded { get; set; } = false;
+
+        public VerticalCalendar(bool isAlternativeMonthView)
+        {
+            this.AlternativeMonthView = isAlternativeMonthView;
+        }
 
         public VerticalCalendar()
         {
@@ -116,10 +127,8 @@ namespace VerticalCalendar
 
         void BuildCalendar()
         {
-            this.Calendar = new ListView(ListViewCachingStrategy.RecycleElement);
-
-            this.Calendar.ItemAppearing += Calendar_ItemAppearing;
-            this.Calendar.ItemDisappearing += Calendar_ItemDisappearing;
+            this.Calendar = new VerticalCalendarListView(this);
+            this.Calendar.RowsVisibleAfterScroll += Calendar_RowsVisibleAfterScroll;
 
             if (this.AlternativeMonthView)
             {
@@ -174,7 +183,7 @@ namespace VerticalCalendar
                 this.Calendar.ItemsSource = months;
 
                 VerticalCalendarRowGroupedViewModel group = months.FirstOrDefault(y => y.FirstOrDefault().FirstDayOfWeek >= startDate);
-                this.Calendar.ScrollTo(group.FirstOrDefault(), group, ScrollToPosition.End, true);
+                this.Calendar.ScrollTo(group.FirstOrDefault(), group, ScrollToPosition.End, false);
 
             } else
             {
@@ -189,91 +198,18 @@ namespace VerticalCalendar
                 }
 
                 this.Calendar.ItemsSource = weeks;
-                this.Calendar.ScrollTo(weeks.FirstOrDefault(y => y.FirstDayOfWeek == startDate), ScrollToPosition.End, true);
+                this.Calendar.ScrollTo(weeks.FirstOrDefault(y => y.FirstDayOfWeek == startDate), ScrollToPosition.End, false);
             }
 
-            Device.BeginInvokeOnMainThread(async () =>
+            Device.BeginInvokeOnMainThread(() =>
             {
                 this.Loaded = true;
-                this.HandleMonthVisiblity();
             });
         }
 
-
-        private void Calendar_ItemAppearing(object sender, ItemVisibilityEventArgs e)
+        private void Calendar_RowsVisibleAfterScroll(object sender, IEnumerable<VerticalCalendarRowViewModel> e)
         {
-            VerticalCalendarRowViewModel item = e.Item as VerticalCalendarRowViewModel;
-            if (item == null) return;
-
-            DateTime currentMonth = item.FirstDayOfWeek;
-
-            if (this.CurrentDateAppearing == currentMonth) return;
-            this.CurrentDateAppearing = currentMonth;
-
-            this.HandleMonthVisiblity();
-        }
-
-
-        private void Calendar_ItemDisappearing(object sender, ItemVisibilityEventArgs e)
-        {
-            VerticalCalendarRowViewModel item = e.Item as VerticalCalendarRowViewModel;
-            if (item == null) return;
-
-            DateTime currentMonth = item.FirstDayOfWeek;
-
-            if (this.CurrentDateDisappearing == currentMonth) return;
-            this.CurrentDateDisappearing = currentMonth;
-
-            this.HandleMonthVisiblity();
-        }
-
-
-        void HandleMonthVisiblity()
-        {
-            if (!this.Loaded) return;
-            if (this.MonthsBecameVisible == null) return;
-            if (this.CurrentDateAppearing == null || this.CurrentDateDisappearing == null) return;
-
-            List<DateTime> range = this.GetVisibleMonthRange();
-            if(range.Count <= 1)
-            {
-                return;
-            }
-
-            this.MonthsBecameVisible.Invoke(this, range);
-        }
-
-        public List<DateTime> GetVisibleMonthRange()
-        {
-            if (!this.CurrentDateDisappearing.HasValue && this.CurrentDateAppearing.HasValue)
-            {
-                this.CurrentDateDisappearing = this.CurrentDateAppearing.Value.AddMonths(-1);
-            }
-
-            if (this.CurrentDateAppearing == null || this.CurrentDateDisappearing == null) return null;
-
-            DateTime startMonth, endMonth;
-            if (this.CurrentDateAppearing > this.CurrentDateDisappearing)
-            {
-                startMonth = this.CurrentDateDisappearing.Value;
-                endMonth = this.CurrentDateAppearing.Value;
-            }
-            else
-            {
-                startMonth = this.CurrentDateAppearing.Value;
-                endMonth = this.CurrentDateDisappearing.Value;
-            }
-
-            List<DateTime> monthRange = new List<DateTime>();
-            DateTime iteratorDate = startMonth;
-
-            while (iteratorDate <= endMonth)
-            {
-                monthRange.Add(iteratorDate);
-                iteratorDate = iteratorDate.AddMonths(1);
-            }
-
-            return monthRange;
+            this.VisibleWeeksAfterScroll?.Invoke(this, e);
         }
 
         void BuildContentGrid()

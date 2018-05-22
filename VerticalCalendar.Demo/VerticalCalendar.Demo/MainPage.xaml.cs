@@ -17,6 +17,15 @@ namespace VerticalCalendarDemo
 
             VerticalCalendar.VerticalCalendar cal;
             this.Content = cal = new VerticalCalendar.VerticalCalendar() { MaximumDate = DateTime.Now.Date, AlternativeMonthView = true};
+            cal.VisibleWeeksAfterScroll += Cal_VisibleWeeksAfterScroll;
 		}
+
+        private void Cal_VisibleWeeksAfterScroll(object sender, IEnumerable<VerticalCalendar.VerticalCalendarRowViewModel> e)
+        {
+            List<DateTime> rows = e.ToList().Select(y => y.FirstDayOfWeek).ToList();
+
+            Debug.WriteLine($"MIN DATE: {rows.Min()}");
+            Debug.WriteLine($"MAX DATE: {rows.Max()}");
+        }
     }
 }
