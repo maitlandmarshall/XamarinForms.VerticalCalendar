@@ -8,6 +8,10 @@ namespace VerticalCalendar
     {
         public DateTime FirstDayOfWeek { get; set; }
 
+#if ANDROID
+        public string GroupHeaderTitle { get; set; }
+#endif
+
         public VerticalCalendarRowViewModel(DateTime date)
         {
             this.FirstDayOfWeek = date;

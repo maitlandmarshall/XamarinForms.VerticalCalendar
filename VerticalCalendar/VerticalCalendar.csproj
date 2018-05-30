@@ -35,6 +35,11 @@
 
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
     <MtouchExtraArgs>--optimize=-remove-dynamic-registrar</MtouchExtraArgs>
+    <DefineConstants>IOS;</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+    <DefineConstants>ANDROID;</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -60,11 +65,6 @@
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
     <Compile Include="**\*.ios.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="VerticalCalendarListView.ios.cs" />
-    <None Remove="VerticalCalendarListView.shared.cs" />
   </ItemGroup>
 
   <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
