@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <!--Update with your target such as: Xamarin.iOS10 or MonoAndroid80 or Xamarin.Mac20-->
-    <TargetFrameworks>Xamarin.iOS10;MonoAndroid80</TargetFrameworks>
+    <TargetFrameworks>Xamarin.iOS10;MonoAndroid80;netstandard2.0</TargetFrameworks>
 
     <!--Don't auto add files for me, I will tell you -->
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>

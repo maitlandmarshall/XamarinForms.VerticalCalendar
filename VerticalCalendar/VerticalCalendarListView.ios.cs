@@ -10,6 +10,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Platform.iOS;
 
+[assembly: ExportRenderer(typeof(VerticalCalendar.VerticalCalendarListView), typeof(VerticalCalendar.VerticalCalendarListViewRenderer))]
 namespace VerticalCalendar
 {
     internal class VerticalCalendarListViewRenderer : ViewRenderer<VerticalCalendarListView, UITableView>

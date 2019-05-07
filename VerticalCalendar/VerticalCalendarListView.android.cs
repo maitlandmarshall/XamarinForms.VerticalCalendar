@@ -12,6 +12,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Platform.Android;
 
+[assembly: ExportRenderer(typeof(VerticalCalendar.VerticalCalendarListView), typeof(VerticalCalendar.VerticalCalendarListViewRenderer))]
 namespace VerticalCalendar
 {
     internal class VerticalCalendarListViewRenderer : ViewRenderer<VerticalCalendarListView, RecyclerView>
@@ -24,13 +25,19 @@ namespace VerticalCalendar
         protected override void OnElementChanged(ElementChangedEventArgs<VerticalCalendarListView> e)
         {
             base.OnElementChanged(e);
-            if (e.NewElement == null) return;
+
+            if (e.NewElement == null)
+                return;
 
             SetNativeControl(new RecyclerView(this.Context));
+
             this.Control.HasFixedSize = true;
+            this.Control.SetPadding(0, 1, 0, 1);
 
             LinearLayoutManager manager = new LinearLayoutManager(this.Context, LinearLayoutManager.Vertical, false);
+
             this.Adapter = new VerticalCalendarListViewAdapter(this.Element, this.Control);
+
             this.Control.SetLayoutManager(manager);
             this.Control.SetAdapter(this.Adapter);
 
@@ -67,7 +74,7 @@ namespace VerticalCalendar
                     this.LayoutManager.ScrollToPosition(position);
                 } else
                 {
-                    this.LayoutManager.ScrollToPositionWithOffset(position, (int)this.Context.ToPixels(150));
+                    this.LayoutManager.ScrollToPositionWithOffset(position, (int)this.Context.ToPixels(350));
                 }
                 
             }

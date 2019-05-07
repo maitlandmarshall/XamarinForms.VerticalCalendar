@@ -10,15 +10,18 @@ namespace VerticalCalendarDemo
 {
 	public partial class MainPage : ContentPage
 	{
+        VerticalCalendar.VerticalCalendar Calendar;
+
 		public MainPage()
 		{
 			InitializeComponent();
             this.Title = "Vertical Calendar Demo";
 
-            VerticalCalendar.VerticalCalendar cal;
-            this.Content = cal = new VerticalCalendar.VerticalCalendar() { MaximumDate = DateTime.Now.Date, AlternativeMonthView = true};
-            cal.VisibleWeeksAfterScroll += Cal_VisibleWeeksAfterScroll;
-		}
+            this.Calendar = new VerticalCalendar.VerticalCalendar(true);
+            this.Calendar.BackgroundColor = Color.Transparent;
+
+            this.GridContent.Children.Add(this.Calendar);
+        }
 
         private void Cal_VisibleWeeksAfterScroll(object sender, IEnumerable<VerticalCalendar.VerticalCalendarRowViewModel> e)
         {

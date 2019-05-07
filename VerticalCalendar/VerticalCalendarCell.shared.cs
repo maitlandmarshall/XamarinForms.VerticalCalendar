@@ -61,13 +61,18 @@ namespace VerticalCalendar
         {
             base.OnBindingContextChanged();
 
+            this.RefreshCell();
+        }
+
+        public void RefreshCell()
+        {
             this.RemoveMonthLabel();
             this.RemoveCustomOverlay();
             this.RemoveCurrentDate();
 
             if (!this.Date.HasValue)
             {
-                if(this.Calendar.AlternativeMonthView)
+                if (this.Calendar.AlternativeMonthView)
                 {
                     this.DayLabel.IsVisible = false;
                     this.SetCellBackgroundColor();

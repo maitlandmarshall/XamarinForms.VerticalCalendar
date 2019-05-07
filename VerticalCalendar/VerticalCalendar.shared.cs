@@ -221,11 +221,11 @@ namespace VerticalCalendar
             this.ContentGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(30) });
             this.ContentGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
-            Grid.SetRow(this.Header, 0);
-            this.ContentGrid.Children.Add(this.Header);
-
             Grid.SetRow(this.Calendar, 1);
             this.ContentGrid.Children.Add(this.Calendar);
+
+            Grid.SetRow(this.Header, 0);
+            this.ContentGrid.Children.Add(this.Header);
         }
         #endregion
 

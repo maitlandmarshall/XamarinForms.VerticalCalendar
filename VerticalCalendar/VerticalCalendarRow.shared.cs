@@ -62,12 +62,27 @@ namespace VerticalCalendar
                 {
                     if(newDate.Month != periodStartDate.Month)
                     {
-                        cell.BindingContext = null;
+                        if (cell.BindingContext == null)
+                        {
+                            cell.RefreshCell();
+                        } else
+                        {
+                            cell.BindingContext = null;
+                        }
+
                     } else
                     {
                         if(firstDayOfWeek.AddDays(i).DayOfWeek != newDate.DayOfWeek)
                         {
-                            cell.BindingContext = null;
+                            if (cell.BindingContext == null)
+                            {
+                                cell.RefreshCell();
+                            }
+                            else
+                            {
+                                cell.BindingContext = null;
+                            }
+
                         } else
                         {
                             cell.BindingContext = newDate;

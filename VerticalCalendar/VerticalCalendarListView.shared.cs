@@ -14,7 +14,6 @@ namespace VerticalCalendar
         public bool Animated { get; set; }
     }
 
-    [RenderWith(typeof(VerticalCalendarListViewRenderer))]
     public class VerticalCalendarListView : ContentView
     {
         public bool IsGroupingEnabled { get; set; }

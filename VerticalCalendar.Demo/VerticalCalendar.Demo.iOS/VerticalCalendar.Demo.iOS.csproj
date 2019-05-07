@@ -93,7 +93,7 @@
     <AppExtensionDebugBundleId />
   </PropertyGroup>
   <PropertyGroup>
-	<MtouchExtraArgs>--optimize=-remove-dynamic-registrar</MtouchExtraArgs>
+    <MtouchExtraArgs>--optimize=-remove-dynamic-registrar</MtouchExtraArgs>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -127,7 +127,7 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="3.0.0.482510" />
+    <PackageReference Include="Xamarin.Forms" Version="3.6.0.344457" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\VerticalCalendar\VerticalCalendar.csproj">
