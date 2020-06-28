@@ -43,44 +43,48 @@ namespace VerticalCalendar
             base.Dispose(disposing);
         }
 
+        Action scrollTo;
         private void Element_ScrollToRequested(object sender, VerticalCalendarScrollToRequestedEventArgs e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
+            int section, row;
+
+            if (this.Element.IsGroupingEnabled)
             {
-                int section, row;
+                section = this.Element.ItemsSource.IndexOf(e.Group);
+                row = (this.Element.ItemsSource.ElementAt(section) as IEnumerable<object>).IndexOf(e.Item);
+            }
+            else
+            {
+                section = 0;
+                row = this.Element.ItemsSource.IndexOf(e.Item);
+            }
 
-                if (this.Element.IsGroupingEnabled)
-                {
-                    section = this.Element.ItemsSource.IndexOf(e.Group);
-                    row = (this.Element.ItemsSource.ElementAt(section) as IEnumerable<object>).IndexOf(e.Item);
-                }
-                else
-                {
-                    section = 0;
-                    row = this.Element.ItemsSource.IndexOf(e.Item);
-                }
+            UITableViewScrollPosition position = 0;
+            switch (e.Position)
+            {
+                case ScrollToPosition.Center:
+                    position = UITableViewScrollPosition.Middle;
+                    break;
+                case ScrollToPosition.End:
+                    position = UITableViewScrollPosition.Bottom;
+                    break;
+                case ScrollToPosition.MakeVisible:
+                    position = UITableViewScrollPosition.None;
+                    break;
+                case ScrollToPosition.Start:
+                    position = UITableViewScrollPosition.Top;
+                    break;
+            }
 
-                UITableViewScrollPosition position = 0;
-                switch (e.Position)
-                {
-                    case ScrollToPosition.Center:
-                        position = UITableViewScrollPosition.Middle;
-                        break;
-                    case ScrollToPosition.End:
-                        position = UITableViewScrollPosition.Bottom;
-                        break;
-                    case ScrollToPosition.MakeVisible:
-                        position = UITableViewScrollPosition.None;
-                        break;
-                    case ScrollToPosition.Start:
-                        position = UITableViewScrollPosition.Top;
-                        break;
-                }
+            this.scrollTo = () => this.Control.ScrollToRow(NSIndexPath.FromRowSection(row, section), position, e.Animated);
+        }
 
-                await Task.Delay(1);
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
 
-                this.Control.ScrollToRow(NSIndexPath.FromRowSection(row, section), position, e.Animated);
-            });
+            this.scrollTo?.Invoke();
+            this.scrollTo = null;
         }
     }
 

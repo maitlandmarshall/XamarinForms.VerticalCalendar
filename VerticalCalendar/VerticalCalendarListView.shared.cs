@@ -33,7 +33,7 @@ namespace VerticalCalendar
                 this.scrollToRequested.Add(value);
                 if(this.scrollToDelayed != null)
                 {
-                    this.scrollToRequested.ForEach(y => y.Invoke(this, this.scrollToDelayed));
+                    value.Invoke(this, scrollToDelayed);
                     this.scrollToDelayed = null;
                 }
             }

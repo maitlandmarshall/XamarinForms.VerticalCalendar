@@ -201,10 +201,7 @@ namespace VerticalCalendar
                 this.Calendar.ScrollTo(weeks.FirstOrDefault(y => y.FirstDayOfWeek == startDate), ScrollToPosition.End, false);
             }
 
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                this.Loaded = true;
-            });
+            this.Loaded = true;
         }
 
         private void Calendar_RowsVisibleAfterScroll(object sender, IEnumerable<VerticalCalendarRowViewModel> e)
